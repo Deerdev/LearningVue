@@ -1,6 +1,9 @@
 const path = require('path');
 const webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+// 将非javascript文件单独打包的工具
+// const ExtractPlugin = require('extract-text-webpack-plugin')
+const miniCssExtractPlugin = require('mini-css-extract-plugin')
 // 生成html并且将生成的js引入进去
 const HTMLPlugin = require('html-webpack-plugin')
 
@@ -14,7 +17,7 @@ var config = {
     entry: path.join(__dirname, 'src/index.js'),
     // 输出文件 全部打包出来到bundle.js
     output: {
-        filename: 'bundle.js',
+        filename: 'bundle.[hash:8].js',
         path: path.join(__dirname, 'dist')
     },
     module: {
@@ -43,21 +46,6 @@ var config = {
                 }
             }]
         }, {
-            // css预处理器 stylus sass等等
-            test: /\.styl$/,
-            use: [
-                'style-loader',
-                'css-loader',
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        // 复用前面loader生成的sourceMap，提升postcss-loader编译速度
-                        sourceMap: true
-                    }
-                },
-                'stylus-loader'
-            ]
-        }, {
             test: /\.jsx$/,
             loader: 'babel-loader'
         }]
@@ -77,6 +65,7 @@ var config = {
     ]
 }
 
+// 测试环境中
 if (isDev) {
     // 打包完的代码比较复杂，配置后可以查看自己写的源码
     config.devtool = '#cheap-module-eval-source-map'
@@ -99,6 +88,122 @@ if (isDev) {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
     )
+    // 添加新的module
+    config.module.rules.push({
+        test: /\.less$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true
+                }
+            },
+            'less-loader'
+        ]
+    }, {
+        // css预处理器 stylus sass等等
+        test: /\.styl$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'postcss-loader',
+                options: {
+                    // 复用前面loader生成的sourceMap，提升postcss-loader编译速度
+                    sourceMap: true
+                }
+            },
+            'stylus-loader'
+        ]
+    }, )
+} else {
+
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        // 区分打包类库代码，将类库抽出去
+        // 打包第三方框架vue vue-router vuex
+        vendor: ['vue']
+    }
+    // 生产环境使用 chunkhash
+    // chunkhash 是针对每一块单独生成的hash，这样只用修改单独的模块，而不会影响vendor的模块（vendor的hash不变）
+    config.output.filename = '[name].[chunkhash:8].js'
+
+    config.module.rules.push({
+        test: /\.less$/,
+        use: [
+            miniCssExtractPlugin.loader,
+            "css-loader",
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true
+                }
+            },
+            'less-loader'
+        ]
+        // use: ExtractPlugin.extract({
+        //     fallback: 'style-loader',
+        //     use: [
+        //         'css-loader',
+        //         {
+        //             loader: 'postcss-loader',
+        //             options: {
+        //                 sourceMap: true
+        //             }
+        //         },
+        //         'less-loader'
+        //     ]
+        // })
+    }, {
+        // css预处理器 stylus sass等等
+        test: /\.styl$/,
+        use: [
+            miniCssExtractPlugin.loader,
+            "css-loader", {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true
+                }
+            },
+            'stylus-loader'
+        ]
+    })
+    config.plugins.push(
+        // 生成的css文件名称，[contenthash:8] 根据内容做hash
+        // new ExtractPlugin('styles.[contenthash:8].css'),
+        new miniCssExtractPlugin({
+            filename: 'styles.[contenthash:8].css'
+        }),
+
+
+        // webpack.optimize.CommonsChunkPlugin: 单独打包第三方类库代码
+        // 打包vendor代码
+        // 与runtime顺序不可换
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'vendor'
+        // }),
+        // 把webpack相关的代码，打包到单独的文件中
+        // webpack给每一个模块加一个id
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'runtime'
+        // })
+
+    )
+
+    // webpack4 改变
+    config.optimization = {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    name: "vendor",
+                    chunks: "initial",
+                    minChunks: 2
+                }
+            }
+        }
+    }
 }
 
 

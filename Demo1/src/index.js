@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import App from './app.vue'
 
-// css和图片会被webpack打包
+// css和图片会被webpack打包，根据配置导入到html中（或者生成一个单独的文件）
 import './assets/styles/test.css'
 import './assets/styles/test-stylus.styl'
-import './assets/images/test.png'
+import './assets/styles/global.styl'
+// import './assets/images/test.png'
 
 
 const root = document.createElement('div')
