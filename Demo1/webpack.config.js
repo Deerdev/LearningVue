@@ -45,7 +45,21 @@ var config = {
         }, {
             // css预处理器 stylus sass等等
             test: /\.styl$/,
-            use: ['style-loader', 'css-loader', 'stylus-loader']
+            use: [
+                'style-loader',
+                'css-loader',
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        // 复用前面loader生成的sourceMap，提升postcss-loader编译速度
+                        sourceMap: true
+                    }
+                },
+                'stylus-loader'
+            ]
+        }, {
+            test: /\.jsx$/,
+            loader: 'babel-loader'
         }]
     },
     plugins: [
