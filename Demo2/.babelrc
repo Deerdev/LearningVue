@@ -1,12 +1,12 @@
 //在vue里面支持jsx代码
 {
-    "presets": [
-        // 包 babel-preset-env
-        "env"
-    ],
-    "plugins": [
-        // 转换vue中的jsx代码，vue的jsx和react有区别
-        // 包 babel-plugin-transform-vue-jsx
-        "transform-vue-jsx"
-    ]
+  "presets": [
+    // 包 babel-preset-env
+    "env"
+  ],
+  "plugins": [
+    // 转换vue中的jsx代码，vue的jsx和react有区别
+    // 包 babel-plugin-transform-vue-jsx
+    "transform-vue-jsx"
+  ]
 }

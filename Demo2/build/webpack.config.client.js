@@ -35,6 +35,7 @@ let config;
 if (isDev) {
   config = merge(baseConfig, {
     mode: "development",
+    // 打包完的代码比较复杂，配置后可以查看自己写的源码(webpack4 中 可以去掉)
     devtool: "#cheap-module-eval-source-map",
     devServer: {
       port: 8000,
@@ -51,8 +52,7 @@ if (isDev) {
       // historyFallback: {}
     },
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.less$/,
           use: [
             "vue-style-loader",
@@ -87,7 +87,7 @@ if (isDev) {
     plugins: defaultPluins.concat([
       // 支持hot加载的 插件
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin()
+      // new webpack.NoEmitOnErrorsPlugin() // webpack4 中去除
     ])
   });
 } else {
@@ -105,8 +105,7 @@ if (isDev) {
       filename: "[name].[chunkhash:8].js"
     },
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.less$/,
           use: [
             miniCssExtractPlugin.loader,
@@ -169,8 +168,12 @@ if (isDev) {
       //     name: 'runtime'
       // })
     ]),
+
+    // webpack4 改变(默认会把代码全部打包到vender里去)
     optimization: {
       splitChunks: {
+        // 默认会把代码全部打包到vender里去
+        chunks: "all",
         cacheGroups: {
           commons: {
             name: "vendor",
@@ -178,7 +181,8 @@ if (isDev) {
             minChunks: 2
           }
         }
-      }
+      },
+      runtimeChunk: true
     }
   });
 }
