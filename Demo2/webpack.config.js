@@ -21,8 +21,7 @@ var config = {
     path: path.join(__dirname, "dist")
   },
   module: {
-    rules: [
-      {
+    rules: [{
         // 告诉webpack 处理.vue文件时，使用哪个loader来解析
         // 正则 .vue结尾的文件 \.vue$ (\转义字符)
         test: /\.vue$/,
@@ -36,20 +35,18 @@ var config = {
       },
       {
         test: /\.(gif|jpg|jpeg|png|svg)$/,
-        use: [
-          {
-            // url-loader 读取图片 转成base64，直接加载到html中
-            // url-loader 依赖file-loader
-            // 这种形式是对url-loader配置一些参数
-            loader: "url-loader",
-            options: {
-              // 文件大小 小于1024，转义成base64
-              limit: 1024,
-              // name: 文件名；ext：文件后缀
-              name: "[name]-aaa.[ext]"
-            }
+        use: [{
+          // url-loader 读取图片 转成base64，直接加载到html中
+          // url-loader 依赖file-loader
+          // 这种形式是对url-loader配置一些参数
+          loader: "url-loader",
+          options: {
+            // 文件大小 小于1024，转义成base64
+            limit: 1024,
+            // name: 文件名；ext：文件后缀
+            name: "[name]-aaa.[ext]"
           }
-        ]
+        }]
       },
       {
         test: /\.jsx$/,
@@ -75,7 +72,7 @@ var config = {
 // 测试环境中
 if (isDev) {
   config.mode = "development";
-  // 打包完的代码比较复杂，配置后可以查看自己写的源码
+  // 打包完的代码比较复杂，配置后可以查看自己写的源码(webpack4 中 可以去掉)
   config.devtool = "#cheap-module-eval-source-map";
   config.devServer = {
     port: 8000,
@@ -97,38 +94,35 @@ if (isDev) {
     new webpack.NoEmitOnErrorsPlugin()
   );
   // 添加新的module
-  config.module.rules.push(
-    {
-      test: /\.less$/,
-      use: [
-        "style-loader",
-        "css-loader",
-        {
-          loader: "postcss-loader",
-          options: {
-            sourceMap: true
-          }
-        },
-        "less-loader"
-      ]
-    },
-    {
-      // css预处理器 stylus sass等等
-      test: /\.styl$/,
-      use: [
-        "style-loader",
-        "css-loader",
-        {
-          loader: "postcss-loader",
-          options: {
-            // 复用前面loader生成的sourceMap，提升postcss-loader编译速度
-            sourceMap: true
-          }
-        },
-        "stylus-loader"
-      ]
-    }
-  );
+  config.module.rules.push({
+    test: /\.less$/,
+    use: [
+      "style-loader",
+      "css-loader",
+      {
+        loader: "postcss-loader",
+        options: {
+          sourceMap: true
+        }
+      },
+      "less-loader"
+    ]
+  }, {
+    // css预处理器 stylus sass等等
+    test: /\.styl$/,
+    use: [
+      "style-loader",
+      "css-loader",
+      {
+        loader: "postcss-loader",
+        options: {
+          // 复用前面loader生成的sourceMap，提升postcss-loader编译速度
+          sourceMap: true
+        }
+      },
+      "stylus-loader"
+    ]
+  });
 } else {
   config.mode = "production";
   config.entry = {
@@ -141,50 +135,47 @@ if (isDev) {
   // chunkhash 是针对每一块单独生成的hash，这样只用修改单独的模块，而不会影响vendor的模块（vendor的hash不变）
   config.output.filename = "[name].[chunkhash:8].js";
 
-  config.module.rules.push(
-    {
-      test: /\.less$/,
-      use: [
-        miniCssExtractPlugin.loader,
-        "css-loader",
-        {
-          loader: "postcss-loader",
-          options: {
-            sourceMap: true
-          }
-        },
-        "less-loader"
-      ]
-      // use: ExtractPlugin.extract({
-      //     fallback: 'style-loader',
-      //     use: [
-      //         'css-loader',
-      //         {
-      //             loader: 'postcss-loader',
-      //             options: {
-      //                 sourceMap: true
-      //             }
-      //         },
-      //         'less-loader'
-      //     ]
-      // })
-    },
-    {
-      // css预处理器 stylus sass等等
-      test: /\.styl$/,
-      use: [
-        miniCssExtractPlugin.loader,
-        "css-loader",
-        {
-          loader: "postcss-loader",
-          options: {
-            sourceMap: true
-          }
-        },
-        "stylus-loader"
-      ]
-    }
-  );
+  config.module.rules.push({
+    test: /\.less$/,
+    use: [
+      miniCssExtractPlugin.loader,
+      "css-loader",
+      {
+        loader: "postcss-loader",
+        options: {
+          sourceMap: true
+        }
+      },
+      "less-loader"
+    ]
+    // use: ExtractPlugin.extract({
+    //     fallback: 'style-loader',
+    //     use: [
+    //         'css-loader',
+    //         {
+    //             loader: 'postcss-loader',
+    //             options: {
+    //                 sourceMap: true
+    //             }
+    //         },
+    //         'less-loader'
+    //     ]
+    // })
+  }, {
+    // css预处理器 stylus sass等等
+    test: /\.styl$/,
+    use: [
+      miniCssExtractPlugin.loader,
+      "css-loader",
+      {
+        loader: "postcss-loader",
+        options: {
+          sourceMap: true
+        }
+      },
+      "stylus-loader"
+    ]
+  });
   config.plugins.push(
     // 生成的css文件名称，[contenthash:8] 根据内容做hash
     // new ExtractPlugin('styles.[contenthash:8].css'),
@@ -205,9 +196,11 @@ if (isDev) {
     // })
   );
 
-  // webpack4 改变
+  // webpack4 改变(默认会把代码全部打包到vender里去)
   config.optimization = {
     splitChunks: {
+      // 默认会把代码全部打包到vender里去
+      chunks: "all",
       cacheGroups: {
         commons: {
           name: "vendor",
@@ -215,7 +208,8 @@ if (isDev) {
           minChunks: 2
         }
       }
-    }
+    },
+    runtimeChunk: true
   };
 }
 

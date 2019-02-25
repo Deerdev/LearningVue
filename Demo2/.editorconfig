@@ -1,0 +1,18 @@
+# 在不同的编辑器之间同步配置 安装插件 EditorConfig for VS Code
+
+# 1级目录即可查找到该文件
+root = true
+
+# 针对所有文件
+[*]
+charset = utf-8
+# 换行
+end_of_line = lf
+# tab键长度
+indent_size = 2
+# tab 是空格
+indent_style = space
+# 保存文件 最后又一个空行
+insert_final_newline = true
+# 去除行位空格
+trim_trailing_whitespace = true
