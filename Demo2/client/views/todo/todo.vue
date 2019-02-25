@@ -1,14 +1,25 @@
 <template>
   <section class="real-app">
     <!-- @keyup.enter监听键盘的enter点击事件 -->
-    <input type="text" class="add-input" autofocus placeholder="接下来要做什么" @keyup.enter="addTodo">
-    <Item v-for="todo in filterTodos" :todo="todo" :key="todo.id" @del="deleteTodo"></Item>
+    <input
+      type="text"
+      class="add-input"
+      autofocus
+      placeholder="接下来要做什么"
+      @keyup.enter="addTodo"
+    >
+    <Item
+      v-for="todo in filterTodos"
+      :key="todo.id"
+      :todo="todo"
+      @del="deleteTodo"
+    />
     <Tabs
       :filter="filter"
       :todos="todos"
       @toggle="toggleFilter"
       @clearAllcompleted="clearAllcompleted"
-    ></Tabs>
+    />
   </section>
 </template>
 <script>
@@ -17,6 +28,10 @@ import Tabs from "./tabs.vue";
 
 let id = 0;
 export default {
+  components: {
+    Item,
+    Tabs
+  },
   data() {
     return {
       todos: [],
@@ -49,10 +64,6 @@ export default {
     clearAllcompleted() {
       this.todos = this.todos.filter(todo => !todo.completed);
     }
-  },
-  components: {
-    Item,
-    Tabs
   }
 };
 </script>

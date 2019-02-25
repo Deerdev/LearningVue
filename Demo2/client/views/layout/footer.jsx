@@ -1,18 +1,19 @@
 // jsx的写法，和vue的区别
 // css 只能引入
-import '../assets/styles/footer.styl'
+import "../assets/styles/footer.styl";
 
 export default {
-  data () {
+  data() {
     return {
-      author: 'deer'
-    }
+      author: "deer"
+    };
   },
-  render () {
+  render() {
     // return (
     // <div id = "footer" >
     //     <span > by {this.author} </span>
     // </div>
     // )
+    return <div />;
   }
-}
+};

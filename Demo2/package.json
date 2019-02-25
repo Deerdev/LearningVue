@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eslint-plugin-vue": "^5.1.0",
     "vue": "^2.6.5"
   },
   "devDependencies": {

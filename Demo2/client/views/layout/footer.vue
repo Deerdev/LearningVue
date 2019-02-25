@@ -1,6 +1,6 @@
 <template>
   <div id="appfooter">
-    <span>by {{author}}</span>
+    <span>by {{ author }}</span>
   </div>
 </template>
 <script>
