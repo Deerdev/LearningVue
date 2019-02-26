@@ -2,23 +2,24 @@
   <div id="app">
     <div id="cover" />
     <Header />
-    <Todo />
+    <!-- <Todo /> -->
+    <router-view />
     <Footer />
   </div>
 </template>
 
 <script>
-import Header from "./views/layout/header.vue";
-import Footer from "./views/layout/footer.vue";
-import Todo from "./views/todo/todo.vue";
+import Header from './views/layout/header.vue'
+import Footer from './views/layout/footer.vue'
+// import Todo from './views/todo/todo.vue'
 
 export default {
   components: {
     Header,
-    Footer,
-    Todo
+    Footer
+    // Todo
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
