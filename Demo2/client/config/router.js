@@ -14,17 +14,21 @@ export default () => {
     // linkExactActiveClass 代表，当前网页路径 和 <router-link to="/app/456"> 中 to 的路径『一致』时，会给该链接 加上 'exact-active-link' 的class
     linkActiveClass: 'active-link',
     linkExactActiveClass: 'exact-active-link',
+    // 页面跳转后，是否滚动页面（滚动条是否调整）
     scrollBehavior (to, from, savedPosition) {
       if (savedPosition) {
+        // 如果保存过 滚动位置，就使用这个位置
         return savedPosition
       } else {
         return { x: 0, y: 0 }
       }
     }
     // fallback: true
+    // 自定义：把地址中的query（?xxx=1&yyy=2）转成 json obj
     // parseQuery (query) {
 
     // },
+    // 自定义：把json obj转成 地址中的query（?xxx=1&yyy=2）
     // stringifyQuery (obj) {
 
     // }

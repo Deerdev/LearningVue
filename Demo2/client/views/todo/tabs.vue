@@ -34,28 +34,26 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      states: ["all", "active", "completed"]
-    };
+      states: ['all', 'active', 'completed']
+    }
   },
   computed: {
-    unFinishedTodoLength() {
-      return this.todos.filter(todo => !todo.completed).length;
+    unFinishedTodoLength () {
+      return this.todos.filter(todo => !todo.completed).length
     }
   },
   methods: {
-    clearAllCompleted() {
-      this.$emit("clearAllcompleted");
+    clearAllCompleted () {
+      this.$emit('clearAllcompleted')
     },
-    toggleFilter(state) {
-      this.$emit("toggle", state);
+    toggleFilter (state) {
+      this.$emit('toggle', state)
     }
   }
-};
+}
 </script>
-
-
 
 <style lang="less" scoped>
 .helper {

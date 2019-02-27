@@ -5,12 +5,12 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
-      author: "deer"
-    };
+      author: 'deer'
+    }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 #appfooter {
